@@ -1,0 +1,92 @@
+---
+title: "Rival_QC_Testing"
+output: html_document
+---
+
+# System Used to Run Tools
+Mac model: iMac, 2024 \
+Chip: Apple M4 \
+Memory: 16 GB \
+macOS: Sequoia
+
+# Test Data and Rival QCs Used 
+There will be 5 long QC tools tested in this document, 3 of which are made solely for visualization and 2 of which are designed to output filtered sequence data.
+
+Tests in this document are run using the test.fastq file from the long QC tool Chopper's repo, as well as with the sequencing_summary.txt file from the package floundeR.
+
+```{data1, eval=FALSE}
+Download sequencing_summary_PAG07165_2dfda515.txt file
+wget https://ont-open-data.s3-eu-west-1.amazonaws.com/gm24385_2020.11/flowcells/20201026_1645_6B_PAG07165_d42912aa/sequencing_summary_PAG07165_2dfda515.txt
+```
+
+```{data2, eval=FALSE}
+Download sequencing_summary_PAG07165_2dfda515.txt file
+wget https://ont-open-data.s3-eu-west-1.amazonaws.com/gm24385_2020.11/flowcells/20201026_1645_6B_PAG07165_d42912aa/sequencing_summary_PAG07165_2dfda515.txt
+```
+
+Visualization Tools
+- NanoPlot
+- PycoQC
+- LongQC
+
+Filtration Tools
+- FiltLong or prowler
+- Chopper
+
+# Installation of Long QC tools for visualization
+
+NanoPlot installation v1.46.1 (~42 Seconds)
+  - Works with python 3.18
+```{viz1, eval=FALSE}
+conda install -c bioconda nanoplot
+```
+
+PycoQC installation v2.2.3 (~1 Minute)
+  - Requires python 3.8
+```{viz2, eval=FALSE}
+conda install -c bioconda pycoqc
+```
+
+LongQC installation
+```{viz3, eval=FALSE}
+This package requires a modified version of minimap2 and install of argp-standalone using homebrew. Homebrew was unavailable and therefore I am passing on installing and testing LongQC. 
+```
+
+# Installation of Long QC tools for filtration
+
+Chopper installation v0.10.0 (~7 Seconds)
+```{filt1, eval=FALSE}
+conda install -c bioconda chopper
+```
+
+FiltLong installation v0.3.0 (~20 Seconds)
+```{filt2, eval=FALSE}
+conda install -c bioconda filtlong
+```
+
+# Thoughts about installations
+Overall installation of these packages was very easy, consisting of one command. 
+
+The only package that wasn't easy to install and led to it not being installed and included in this inital test of rival QCs is the vizualiztion tool LongQC. This tool required an installation of Homebrew and a modified verison of minimap2 which I could not get to work with the school macs.
+
+Edit: installation of pycoqc doesn't work, given its in a python3.8 env. There is a clash which doesn't let jupiter notebooks work with pycoqc when using python3.8. PycoQC can be installed with python 3.13.7 however it runs into the problem of unsupported format string passed. In other words python version is a problem no matter what. This problem occurs because he package is no longer maintained. If we wanted to use this package for testing, most likely we would have to run it in docker.
+
+# Visualization Test With NanoPlot using 
+```{nano1, eval=FALSE}
+nanoplot --fastq ./test.fastq --outdir ./  > nanoplot_hex.log 2>&1
+```
+
+<iframe
+  src="./test_nano/NanoPlot-report.html"
+  width="100%"
+  height="900"
+  style="border:1px solid #ddd;">
+</iframe>
+
+# Visualization Test With PycoQC
+This command should work, however due to the package no longer being maintained it has issues working without docker
+```{pycoqc1, eval=FALSE}
+pycoqc -f ./sequencing_summary_PAG07165_2dfda515.txt -o ./test_pycoqc
+```
+
+
